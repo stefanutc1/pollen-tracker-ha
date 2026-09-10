@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Ambrosia & European Pollen",
+        "description": "Configure pollen forecast based on Copernicus CAMS Europe via Open-Meteo.",
+        "data": {
+          "location_name": "Location Name",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "pollen_types": "Pollen Types to Track",
+          "scan_interval": "Update Interval (minutes)"
+        }
+      }
+    },
+    "error": {
+      "no_pollen_selected": "Please select at least one pollen type."
+    },
+    "abort": {
+      "already_configured": "This location is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ambrosia Options",
+        "data": {
+          "pollen_types": "Pollen Types to Track",
+          "scan_interval": "Update Interval (minutes)"
+        }
+      }
+    }
+  }
+}

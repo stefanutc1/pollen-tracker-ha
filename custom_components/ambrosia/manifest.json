@@ -1,0 +1,12 @@
+{
+  "domain": "ambrosia",
+  "name": "Ambrosia & European Pollen",
+  "codeowners": [
+    "@ygreq"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/ygreq/ambrosia-ha",
+  "issue_tracker": "https://github.com/ygreq/ambrosia-ha/issues",
+  "iot_class": "cloud_polling",
+  "version": "1.0.0"
+}

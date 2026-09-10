@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Ambrozie & Polen European",
+        "description": "Configurare prognoză polen bazată pe modelul CAMS Europe (Copernicus) via Open-Meteo.",
+        "data": {
+          "location_name": "Nume Locație",
+          "latitude": "Latitudine",
+          "longitude": "Longitudine",
+          "pollen_types": "Tipuri de Polen Monitorizate",
+          "scan_interval": "Interval de actualizare (minute)"
+        }
+      }
+    },
+    "error": {
+      "no_pollen_selected": "Vă rugăm să selectați cel puțin un tip de polen."
+    },
+    "abort": {
+      "already_configured": "Această locație este deja configurată."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opțiuni Ambrozie & Polen",
+        "data": {
+          "pollen_types": "Tipuri de Polen Monitorizate",
+          "scan_interval": "Interval de actualizare (minute)"
+        }
+      }
+    }
+  }
+}
