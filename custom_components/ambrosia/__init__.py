@@ -39,11 +39,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_POLLEN_TYPES,
         entry.data.get(CONF_POLLEN_TYPES, [k for k, v in POLLEN_SPECIES.items() if v.get("default")]),
     )
-    scan_interval = entry.options.get(
+    scan_interval = int(entry.options.get(
         CONF_SCAN_INTERVAL,
         entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-    )
-    forecast_days = entry.data.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS)
+    ))
+    forecast_days = int(entry.data.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS))
 
     coordinator = AmbrosiaDataCoordinator(
         hass,

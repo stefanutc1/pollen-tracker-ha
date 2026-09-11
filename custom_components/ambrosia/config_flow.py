@@ -10,6 +10,7 @@ from homeassistant import config_entries
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import selector
 
 from .const import (
@@ -50,7 +51,7 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            location_name = user_input.get(CONF_LOCATION_NAME, DEFAULT_NAME).strip()
+            location_name = str(user_input.get(CONF_LOCATION_NAME, DEFAULT_NAME)).strip()
             lat = round(float(user_input[CONF_LATITUDE]), 4)
             lon = round(float(user_input[CONF_LONGITUDE]), 4)
             selected_pollens = user_input.get(CONF_POLLEN_TYPES, [])
@@ -69,20 +70,21 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_LATITUDE: lat,
                         CONF_LONGITUDE: lon,
                         CONF_POLLEN_TYPES: selected_pollens,
-                        CONF_SCAN_INTERVAL: user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-                        CONF_FORECAST_DAYS: user_input.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS),
+                        CONF_SCAN_INTERVAL: int(user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)),
+                        CONF_FORECAST_DAYS: int(user_input.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS)),
                     },
                 )
 
-        default_lat = self.hass.config.latitude
-        default_lon = self.hass.config.longitude
+        default_lat = float(self.hass.config.latitude) if self.hass.config.latitude is not None else 44.4323
+        default_lon = float(self.hass.config.longitude) if self.hass.config.longitude is not None else 26.1063
+        default_location = str(self.hass.config.location_name or DEFAULT_NAME)
         default_pollens = [k for k, v in POLLEN_SPECIES.items() if v.get("default", False)]
 
         schema = vol.Schema(
             {
-                vol.Required(CONF_LOCATION_NAME, default=self.hass.config.location_name or DEFAULT_NAME): str,
-                vol.Required(CONF_LATITUDE, default=default_lat): cv_latitude(),
-                vol.Required(CONF_LONGITUDE, default=default_lon): cv_longitude(),
+                vol.Required(CONF_LOCATION_NAME, default=default_location): cv.string,
+                vol.Required(CONF_LATITUDE, default=default_lat): cv.latitude,
+                vol.Required(CONF_LONGITUDE, default=default_lon): cv.longitude,
                 vol.Required(
                     CONF_POLLEN_TYPES,
                     default=default_pollens,
@@ -93,7 +95,7 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
-                vol.Optional(CONF_FORECAST_DAYS, default=DEFAULT_FORECAST_DAYS): selector.SelectSelector(
+                vol.Optional(CONF_FORECAST_DAYS, default=str(DEFAULT_FORECAST_DAYS)): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=[
                             selector.SelectOptionDict(value="3", label="3 Days Forecast"),
@@ -103,8 +105,14 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
-                vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
-                    vol.Coerce(int), vol.Range(min=15, max=1440)
+                vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=15,
+                        max=1440,
+                        step=1,
+                        mode=selector.NumberSelectorMode.BOX,
+                        unit_of_measurement="min",
+                    )
                 ),
             }
         )
@@ -132,7 +140,13 @@ class AmbrosiaOptionsFlow(config_entries.OptionsFlow):
     ) -> FlowResult:
         """Manage options."""
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            return self.async_create_entry(
+                title="",
+                data={
+                    CONF_POLLEN_TYPES: user_input.get(CONF_POLLEN_TYPES, []),
+                    CONF_SCAN_INTERVAL: int(user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)),
+                }
+            )
 
         current_pollens = self.config_entry.options.get(
             CONF_POLLEN_TYPES,
@@ -140,10 +154,10 @@ class AmbrosiaOptionsFlow(config_entries.OptionsFlow):
                 CONF_POLLEN_TYPES, [k for k, v in POLLEN_SPECIES.items() if v.get("default")]
             ),
         )
-        current_scan = self.config_entry.options.get(
+        current_scan = int(self.config_entry.options.get(
             CONF_SCAN_INTERVAL,
             self.config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-        )
+        ))
 
         schema = vol.Schema(
             {
@@ -157,18 +171,16 @@ class AmbrosiaOptionsFlow(config_entries.OptionsFlow):
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
-                vol.Optional(CONF_SCAN_INTERVAL, default=current_scan): vol.All(
-                    vol.Coerce(int), vol.Range(min=15, max=1440)
+                vol.Optional(CONF_SCAN_INTERVAL, default=current_scan): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=15,
+                        max=1440,
+                        step=1,
+                        mode=selector.NumberSelectorMode.BOX,
+                        unit_of_measurement="min",
+                    )
                 ),
             }
         )
 
         return self.async_show_form(step_id="init", data_schema=schema)
-
-
-def cv_latitude():
-    return vol.All(vol.Coerce(float), vol.Range(min=-90, max=90))
-
-
-def cv_longitude():
-    return vol.All(vol.Coerce(float), vol.Range(min=-180, max=180))

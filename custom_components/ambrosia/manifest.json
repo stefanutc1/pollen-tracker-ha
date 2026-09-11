@@ -8,5 +8,5 @@
   "documentation": "https://github.com/ygreq/ambrosia-pollen-radar-ha",
   "issue_tracker": "https://github.com/ygreq/ambrosia-pollen-radar-ha/issues",
   "iot_class": "cloud_polling",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }
