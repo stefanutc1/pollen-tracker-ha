@@ -1,4 +1,4 @@
-"""Config flow for Ambrosia & European Pollen integration."""
+"""Config flow for Ambrosia Pollen Radar."""
 from __future__ import annotations
 
 import logging
@@ -32,21 +32,21 @@ def get_pollen_options() -> list[selector.SelectOptionDict]:
     return [
         selector.SelectOptionDict(
             value=key,
-            label=f"{info['name_en']} / {info['name_ro']}"
+            label=f"{info['name_en']} ({info['name_ro']})"
         )
         for key, info in POLLEN_SPECIES.items()
     ]
 
 
 class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Ambrosia Pollen."""
+    """Handle a config flow for Ambrosia Pollen Radar."""
 
     VERSION = 1
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handle the initial setup step."""
+        """Handle initial step."""
         errors: dict[str, str] = {}
 
         if user_input is not None:
@@ -63,7 +63,7 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
-                    title=f"Ambrosia ({location_name})",
+                    title=f"Ambrosia Radar ({location_name})",
                     data={
                         CONF_LOCATION_NAME: location_name,
                         CONF_LATITUDE: lat,
@@ -74,7 +74,6 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     },
                 )
 
-        # Default to Home Assistant home coordinates
         default_lat = self.hass.config.latitude
         default_lon = self.hass.config.longitude
         default_pollens = [k for k, v in POLLEN_SPECIES.items() if v.get("default", False)]
@@ -94,6 +93,16 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
+                vol.Optional(CONF_FORECAST_DAYS, default=DEFAULT_FORECAST_DAYS): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[
+                            selector.SelectOptionDict(value="3", label="3 Days Forecast"),
+                            selector.SelectOptionDict(value="5", label="5 Days Forecast"),
+                            selector.SelectOptionDict(value="7", label="7 Days Forecast"),
+                        ],
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                    )
+                ),
                 vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
                     vol.Coerce(int), vol.Range(min=15, max=1440)
                 ),
@@ -109,7 +118,6 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> AmbrosiaOptionsFlow:
-        """Get the options flow for this handler."""
         return AmbrosiaOptionsFlow(config_entry)
 
 
@@ -117,13 +125,12 @@ class AmbrosiaOptionsFlow(config_entries.OptionsFlow):
     """Handle Ambrosia options."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
         self.config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Manage the options."""
+        """Manage options."""
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 

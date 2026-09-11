@@ -2,13 +2,14 @@
   "config": {
     "step": {
       "user": {
-        "title": "Ambrozie & Polen European",
-        "description": "Configurare prognoză polen bazată pe modelul CAMS Europe (Copernicus) via Open-Meteo.",
+        "title": "Radar polen ambrozie",
+        "description": "Configurați prognoza de polen și ambrozie pentru zona casei tale prin Copernicus CAMS Europe (Open-Meteo).",
         "data": {
           "location_name": "Nume Locație",
           "latitude": "Latitudine",
           "longitude": "Longitudine",
           "pollen_types": "Tipuri de Polen Monitorizate",
+          "forecast_days": "Orizont prognoză (zile)",
           "scan_interval": "Interval de actualizare (minute)"
         }
       }
@@ -23,11 +24,36 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opțiuni Ambrozie & Polen",
+        "title": "Opțiuni Radar polen ambrozie",
         "data": {
           "pollen_types": "Tipuri de Polen Monitorizate",
           "scan_interval": "Interval de actualizare (minute)"
         }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "concentration": {
+        "name": "Concentrație"
+      },
+      "risk_level": {
+        "name": "Nivel Risc"
+      },
+      "trend": {
+        "name": "Tendință"
+      },
+      "ventilation_window": {
+        "name": "Fereastră Aerisire"
+      },
+      "max_today": {
+        "name": "Maxim Azi"
+      },
+      "max_tomorrow": {
+        "name": "Maxim Mâine"
+      },
+      "max_day3": {
+        "name": "Maxim Poimâine"
       }
     }
   }

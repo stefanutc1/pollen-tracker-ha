@@ -1,4 +1,4 @@
-"""Constants for the Ambrosia & European Pollen integration."""
+"""Constants for Ambrosia Pollen Radar integration."""
 from __future__ import annotations
 
 DOMAIN = "ambrosia"
@@ -9,7 +9,7 @@ CONF_POLLEN_TYPES = "pollen_types"
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_FORECAST_DAYS = "forecast_days"
 
-DEFAULT_NAME = "Ambrosia"
+DEFAULT_NAME = "Ambrosia Pollen Radar"
 DEFAULT_SCAN_INTERVAL = 60  # minutes
 DEFAULT_FORECAST_DAYS = 3
 
@@ -57,12 +57,51 @@ POLLEN_SPECIES = {
     },
 }
 
-# European aerobiology thresholds (grains/m3)
-# Very Low (<1), Low (1-10), Moderate (10-50), High (50-200), Very High (>200)
+# Calibrated 5-level severity scale (grains/m3)
+# Very Low (<5), Low (5-10), Moderate (10-30), High (30-100), Very High (>=100)
 RISK_LEVELS = [
-    {"max": 1, "level_en": "Very Low", "level_ro": "Foarte scăzut", "color_hex": "#2ecc71", "color_dec": 3066993, "icon": "mdi:shield-check"},
-    {"max": 10, "level_en": "Low", "level_ro": "Scăzut", "color_hex": "#a3cb38", "color_dec": 10734392, "icon": "mdi:leaf"},
-    {"max": 50, "level_en": "Moderate", "level_ro": "Moderat", "color_hex": "#f39c12", "color_dec": 15965202, "icon": "mdi:alert-circle"},
-    {"max": 200, "level_en": "High", "level_ro": "Ridicat", "color_hex": "#e74c3c", "color_dec": 15158332, "icon": "mdi:alert-octagon"},
-    {"max": 999999, "level_en": "Extremely High", "level_ro": "Extrem", "color_hex": "#8e44ad", "color_dec": 9323693, "icon": "mdi:alert-decagram"},
+    {
+        "max": 5,
+        "level_en": "Very Low",
+        "level_ro": "Foarte redus",
+        "color_hex": "#2ecc71",
+        "color_dec": 3066993,
+        "icon": "mdi:shield-check",
+    },
+    {
+        "max": 10,
+        "level_en": "Low",
+        "level_ro": "Redus",
+        "color_hex": "#a3cb38",
+        "color_dec": 10734392,
+        "icon": "mdi:leaf",
+    },
+    {
+        "max": 30,
+        "level_en": "Moderate",
+        "level_ro": "Moderat",
+        "color_hex": "#f39c12",
+        "color_dec": 15965202,
+        "icon": "mdi:alert-circle",
+    },
+    {
+        "max": 100,
+        "level_en": "High",
+        "level_ro": "Ridicat",
+        "color_hex": "#e74c3c",
+        "color_dec": 15158332,
+        "icon": "mdi:alert-octagon",
+    },
+    {
+        "max": 999999,
+        "level_en": "Very High",
+        "level_ro": "Foarte ridicat",
+        "color_hex": "#8e44ad",
+        "color_dec": 9323693,
+        "icon": "mdi:alert-decagram",
+    },
 ]
+
+# Civic reporting URL
+CIVIC_MAP_URL = "https://www.hartaambroziei.ro/"
+CIVIC_LAW_REF = "Legea nr. 62/2018 (modificată prin Legea 272/2023)"

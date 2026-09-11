@@ -1,4 +1,4 @@
-"""Sensor platform for Ambrosia & European Pollen integration."""
+"""Sensor platform for Ambrosia Pollen Radar."""
 from __future__ import annotations
 
 from typing import Any
@@ -33,7 +33,7 @@ async def async_setup_entry(
             continue
         p_info = POLLEN_SPECIES[pollen_key]
 
-        # 1. Main Current Concentration Sensor (with rich attributes)
+        # 1. Main Current Concentration Sensor
         entities.append(
             AmbrosiaCurrentPollenSensor(
                 coordinator=coordinator,
@@ -55,7 +55,29 @@ async def async_setup_entry(
             )
         )
 
-        # 3. Max Today Sensor
+        # 3. Trend Sensor
+        entities.append(
+            AmbrosiaTrendSensor(
+                coordinator=coordinator,
+                entry=entry,
+                pollen_key=pollen_key,
+                pollen_info=p_info,
+                location_name=location_name,
+            )
+        )
+
+        # 4. Best Ventilation Window Sensor
+        entities.append(
+            AmbrosiaVentilationWindowSensor(
+                coordinator=coordinator,
+                entry=entry,
+                pollen_key=pollen_key,
+                pollen_info=p_info,
+                location_name=location_name,
+            )
+        )
+
+        # 5. Max Today Sensor
         entities.append(
             AmbrosiaMaxTodaySensor(
                 coordinator=coordinator,
@@ -66,7 +88,7 @@ async def async_setup_entry(
             )
         )
 
-        # 4. Max Tomorrow Sensor
+        # 6. Max Tomorrow Sensor
         entities.append(
             AmbrosiaMaxTomorrowSensor(
                 coordinator=coordinator,
@@ -77,7 +99,7 @@ async def async_setup_entry(
             )
         )
 
-        # 5. Max Day 3 Sensor
+        # 7. Max Day 3 Sensor
         entities.append(
             AmbrosiaMaxDay3Sensor(
                 coordinator=coordinator,
@@ -92,7 +114,7 @@ async def async_setup_entry(
 
 
 class AmbrosiaBaseSensor(CoordinatorEntity[AmbrosiaDataCoordinator], SensorEntity):
-    """Base sensor for Ambrosia integration."""
+    """Base sensor for Ambrosia Pollen Radar."""
 
     _attr_has_entity_name = True
 
@@ -139,12 +161,10 @@ class AmbrosiaCurrentPollenSensor(AmbrosiaBaseSensor):
 
     @property
     def native_value(self) -> float | None:
-        """Return current concentration in grains/m3."""
         return self.pollen_data.get("current_concentration")
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        """Return comprehensive forecast attributes."""
         d = self.pollen_data
         if not d:
             return {}
@@ -153,14 +173,20 @@ class AmbrosiaCurrentPollenSensor(AmbrosiaBaseSensor):
             "risk_level_ro": d.get("risk_level_ro"),
             "risk_color_hex": d.get("risk_color_hex"),
             "risk_color_dec": d.get("risk_color_dec"),
+            "trend_en": d.get("trend_en"),
+            "trend_ro": d.get("trend_ro"),
             "max_today": d.get("max_today"),
             "peak_hour_today": d.get("peak_hour_today"),
             "max_tomorrow": d.get("max_tomorrow"),
             "peak_hour_tomorrow": d.get("peak_hour_tomorrow"),
             "max_day3": d.get("max_day3"),
             "peak_hour_day3": d.get("peak_hour_day3"),
+            "ventilation_window": d.get("ventilation_window"),
+            "ventilation_active_now": d.get("ventilation_active_now"),
             "recommendation_en": d.get("recommendation_en"),
             "recommendation_ro": d.get("recommendation_ro"),
+            "civic_map_url": self.coordinator.data.get("civic_map_url"),
+            "civic_law_ref": self.coordinator.data.get("civic_law_ref"),
             "forecast_48h": d.get("forecast_48h", []),
             "time": self.coordinator.data.get("time_series", []),
             "hourly_values": d.get("hourly_values", []),
@@ -168,7 +194,7 @@ class AmbrosiaCurrentPollenSensor(AmbrosiaBaseSensor):
 
 
 class AmbrosiaRiskLevelSensor(AmbrosiaBaseSensor):
-    """Sensor: Current Risk Level."""
+    """Sensor: Current qualitative Risk Level."""
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -177,20 +203,69 @@ class AmbrosiaRiskLevelSensor(AmbrosiaBaseSensor):
 
     @property
     def native_value(self) -> str | None:
-        """Return qualitative risk level."""
-        return self.pollen_data.get("risk_level_ro")
+        # Base state returns English for international default, translations handle UI
+        return self.pollen_data.get("risk_level_en")
 
     @property
     def icon(self) -> str:
-        """Return icon adapting to risk."""
         return self.pollen_data.get("risk_icon", "mdi:shield-check")
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
             "risk_level_en": self.pollen_data.get("risk_level_en"),
+            "risk_level_ro": self.pollen_data.get("risk_level_ro"),
             "color_hex": self.pollen_data.get("risk_color_hex"),
             "color_dec": self.pollen_data.get("risk_color_dec"),
+        }
+
+
+class AmbrosiaTrendSensor(AmbrosiaBaseSensor):
+    """Sensor: Pollen Trend (+3h outlook)."""
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self._attr_unique_id = f"{self.coordinator.name}_{self.pollen_key}_trend"
+        self._attr_name = f"{self.pollen_info['name_en']} Trend"
+
+    @property
+    def native_value(self) -> str | None:
+        return self.pollen_data.get("trend_en")
+
+    @property
+    def icon(self) -> str:
+        return self.pollen_data.get("trend_icon", "mdi:arrow-right")
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {
+            "trend_en": self.pollen_data.get("trend_en"),
+            "trend_ro": self.pollen_data.get("trend_ro"),
+        }
+
+
+class AmbrosiaVentilationWindowSensor(AmbrosiaBaseSensor):
+    """Sensor: Best 2-hour ventilation window."""
+
+    _attr_icon = "mdi:window-open-variant"
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self._attr_unique_id = f"{self.coordinator.name}_{self.pollen_key}_ventilation_window"
+        self._attr_name = f"{self.pollen_info['name_en']} Ventilation Window"
+
+    @property
+    def native_value(self) -> str | None:
+        return self.pollen_data.get("ventilation_window")
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        d = self.pollen_data
+        return {
+            "is_active_now": d.get("ventilation_active_now", False),
+            "start": d.get("ventilation_start"),
+            "end": d.get("ventilation_end"),
+            "avg_concentration": d.get("ventilation_avg"),
         }
 
 
