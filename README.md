@@ -8,6 +8,13 @@ An intelligent Home Assistant integration for **Ambrosia (Ragweed) and allergen 
 
 No physical sensor required! Provides hourly regional forecasts, peak exposure hours, trend analysis, and an optimal daily **Ventilation Window** algorithm.
 
+> [!IMPORTANT]
+> **🌍 Geographic Coverage: Europe Only (Copernicus CAMS)**
+> Pollen forecasting is powered by the European Union's **Copernicus CAMS European Air Quality Ensemble**. Consequently, **pollen data is exclusively available for locations within Europe** (latitudes ~30°N–72°N, longitudes ~25°W–45°E). Coordinates outside Europe (such as the US, Canada, or Asia) will return `null` for pollen parameters.
+> 
+> 🇷🇴 **Special Calibration for Romania & Romanian Users:**
+> Ambrosia (*Ambrosia artemisiifolia*) is an aggressive invasive weed severely affecting Central & Eastern Europe, with Romania experiencing heavy autumn infestations. This integration has been fine-tuned with a realistic 5-level concentration scale (`<5`, `5-10`, `10-30`, `30-100`, `≥100` grains/m³), civic reporting links ([HartaAmbroziei.ro](https://www.hartaambroziei.ro/) / Law 62/2018), and full bilingual attribute support (`_ro` and `_en`) for seamless Romanian automations and family dashboards.
+
 ---
 
 ## 🌟 Key Features
@@ -215,6 +222,17 @@ action:
 # 🇷🇴 Prezentare în Română: Radar polen ambrozie
 
 Integrare Home Assistant **proiectată și optimizată specific pentru combaterea și monitorizarea ambroziei** (*Ambrosia artemisiifolia*), cel mai agresiv alergen de toamnă. Folosește modelul numeric european de referință **Copernicus CAMS Europe** via Open-Meteo.
+
+> [!IMPORTANT]
+> **🌍 Acoperire Geografică: Exclusiv Teritoriul Europei (Copernicus CAMS)**
+> Prognoza polenului este asigurată de ansamblul european de modele numerice CAMS. Serviciul este disponibil **exclusiv pentru coordonate aflate pe continentul european** (latitudini ~30°N–72°N, longitudini ~25°V–45°E). Pentru locații din afara Europei (cum ar fi America de Nord/SUA), furnizorul de date nu deține modele deschise de polen și returnează valori nule (`null`).
+> 
+> 🇷🇴 **Calibrare specială pentru România și utilizatorii români:**
+> În România, ambrozia este o problemă acută de sănătate publică. Integrarea include ajustări dedicate:
+> - **Scală de risc pe 5 praguri** adaptată la expunerea reală locală (`<5` Foarte redus, `5-10` Redus, `10-30` Moderat, `30-100` Ridicat, `≥100` Foarte ridicat).
+> - **Algoritm de aerisire (`ventilation_window`)** calibrat să evite orele critice ale dimineții când ambrozia își deschide florile și împrăștie grăuncioarele de polen.
+> - **Civic & Legal:** Link direct către [HartaAmbroziei.ro](https://www.hartaambroziei.ro/) și referință legislativă la Legea nr. 62/2018 (modificată prin Legea 272/2023).
+> - **Atribute bilingve (`_ro` / `_en`):** Permite utilizatorilor cu Home Assistant în limba engleză să trimită notificări pe telefon sau Discord direct în limba română, fără șabloane Jinja2 complicate.
 
 ### ✨ Funcții Avansate
 1. **Focus Total pe Ambrozie:** Algoritmii, pragurile de severitate, alertele matinale și fereastra de aerisire sunt calibrate special pentru dinamica ambroziei. Opțional, pot fi activați și alți alergeni secundari (pelin, graminee, mesteacăn) pentru acoperire pe durata întregului an.
