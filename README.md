@@ -6,7 +6,7 @@
 
 An intelligent Home Assistant integration for **comprehensive seasonal pollen, allergen, and ragweed forecasting** across Europe, powered by the European Union's **Copernicus Atmosphere Monitoring Service (CAMS Europe)** via the free **Open-Meteo Air Quality API**.
 
-No physical sensor required! Provides hourly regional forecasts, peak exposure hours, 3-hour trend analysis, an optimal daily **Smart Ventilation Window** algorithm, and built-in **civic reporting tools for Ragweed hot-spots (HartaAmbroziei.ro)**.
+No physical sensor required! Provides hourly regional forecasts, peak exposure hours, 3-hour trend analysis, an optimal daily **Smart Ventilation Window** algorithm, and built-in **civic reporting tools for Ragweed hot-spots in Romania (HartaAmbroziei.ro)**.
 
 > [!IMPORTANT]
 > **🌍 Geographic Coverage: Europe Only (Copernicus CAMS)**
@@ -63,7 +63,7 @@ The integration monitors the 6 major aeroallergens modeled by Copernicus CAMS. Y
 
 ---
 
-## 🏛️ Civic Action: Reporting Ragweed Infestations via HartaAmbroziei.ro
+## 🏛️ Civic Action: Reporting Ragweed Infestations in Romania (HartaAmbroziei.ro)
 
 Unlike tree or grass pollens, **Ragweed (Ambrosia) is legally regulated in Romania**. Landowners are legally required to clear ragweed by June 30th each year and maintain clean lots until the end of October.
 
