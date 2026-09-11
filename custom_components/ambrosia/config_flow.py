@@ -64,7 +64,7 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
-                    title=f"Ambrosia Radar ({location_name})",
+                    title=f"Pollen Tracker ({location_name})",
                     data={
                         CONF_LOCATION_NAME: location_name,
                         CONF_LATITUDE: lat,

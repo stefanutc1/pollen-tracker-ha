@@ -9,7 +9,7 @@ CONF_POLLEN_TYPES = "pollen_types"
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_FORECAST_DAYS = "forecast_days"
 
-DEFAULT_NAME = "Ambrosia Pollen Radar"
+DEFAULT_NAME = "Pollen Tracker"
 DEFAULT_SCAN_INTERVAL = 60  # minutes
 DEFAULT_FORECAST_DAYS = 3
 

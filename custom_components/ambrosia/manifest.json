@@ -1,12 +1,12 @@
 {
   "domain": "ambrosia",
-  "name": "Ambrosia Pollen Radar",
+  "name": "Pollen Tracker",
   "codeowners": [
     "@ygreq"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/ygreq/ambrosia-pollen-radar-ha",
-  "issue_tracker": "https://github.com/ygreq/ambrosia-pollen-radar-ha/issues",
+  "documentation": "https://github.com/ygreq/pollen-tracker-ha",
+  "issue_tracker": "https://github.com/ygreq/pollen-tracker-ha/issues",
   "iot_class": "cloud_polling",
-  "version": "1.1.1"
+  "version": "1.2.0"
 }

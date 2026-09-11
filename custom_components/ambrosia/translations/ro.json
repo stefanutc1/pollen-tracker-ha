@@ -2,15 +2,15 @@
   "config": {
     "step": {
       "user": {
-        "title": "Radar polen ambrozie",
-        "description": "Configurați prognoza de polen și ambrozie pentru zona casei tale prin Copernicus CAMS Europe (Open-Meteo).",
+        "title": "Tracker Polen & Alergeni",
+        "description": "Configurează prognoza de polen și alergeni pentru zona ta prin Copernicus CAMS Europe (Open-Meteo).\n\n💡 Sfat: În perioada august–septembrie este foarte recomandat să selectați atât Ambrozia, cât și Pelinul (Artemisia), întrucât polenizează simultan și provoacă frecvent alergii încrucișate.",
         "data": {
           "location_name": "Nume Locație",
           "latitude": "Latitudine",
           "longitude": "Longitudine",
-          "pollen_types": "Tipuri de Polen Monitorizate",
+          "pollen_types": "Tipuri de polen monitorizate",
           "forecast_days": "Orizont prognoză (zile)",
-          "scan_interval": "Interval de actualizare (minute)"
+          "scan_interval": "Interval actualizare (minute)"
         }
       }
     },
@@ -24,10 +24,11 @@
   "options": {
     "step": {
       "init": {
-        "title": "Opțiuni Radar polen ambrozie",
+        "title": "Opțiuni Tracker Polen & Alergeni",
+        "description": "Ajustează speciile de polen monitorizate și frecvența de actualizare.",
         "data": {
-          "pollen_types": "Tipuri de Polen Monitorizate",
-          "scan_interval": "Interval de actualizare (minute)"
+          "pollen_types": "Tipuri de polen monitorizate",
+          "scan_interval": "Interval actualizare (minute)"
         }
       }
     }
@@ -38,22 +39,22 @@
         "name": "Concentrație"
       },
       "risk_level": {
-        "name": "Nivel Risc"
+        "name": "Nivel de risc"
       },
       "trend": {
         "name": "Tendință"
       },
       "ventilation_window": {
-        "name": "Fereastră Aerisire"
+        "name": "Fereastră de aerisire"
       },
       "max_today": {
-        "name": "Maxim Azi"
+        "name": "Maxim azi"
       },
       "max_tomorrow": {
-        "name": "Maxim Mâine"
+        "name": "Maxim mâine"
       },
       "max_day3": {
-        "name": "Maxim Poimâine"
+        "name": "Maxim poimâine"
       }
     }
   }

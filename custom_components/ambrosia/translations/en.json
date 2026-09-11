@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Ambrosia Pollen Radar",
-        "description": "Configure pollen and ragweed forecast for your Home Assistant local area via Copernicus CAMS Europe (Open-Meteo).",
+        "title": "Pollen Tracker",
+        "description": "Configure pollen and allergen tracking for your local area via Copernicus CAMS Europe (Open-Meteo).\n\n💡 Tip: In August–September, we strongly recommend tracking both Ragweed (Ambrosia) and Mugwort (Artemisia), as they bloom in parallel and frequently trigger cross-allergic reactions.",
         "data": {
           "location_name": "Location Name",
           "latitude": "Latitude",
@@ -24,7 +24,8 @@
   "options": {
     "step": {
       "init": {
-        "title": "Ambrosia Pollen Radar Options",
+        "title": "Pollen Tracker Options",
+        "description": "Adjust tracked pollen species and update frequency.",
         "data": {
           "pollen_types": "Pollen Types to Track",
           "scan_interval": "Update Interval (minutes)"
