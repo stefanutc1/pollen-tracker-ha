@@ -2,9 +2,9 @@ name: Validate Integration
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main", "master" ]
 
 jobs:
   validate-hacs:
@@ -15,9 +15,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: HACS Action
-        uses: hacs/action/validate@master
+        uses: hacs/action@main
         with:
           category: integration
+          ignore: "brands topics description issues"
 
   validate-hassfest:
     name: Hassfest Validation

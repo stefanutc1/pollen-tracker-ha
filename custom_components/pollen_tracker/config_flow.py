@@ -1,4 +1,5 @@
 """Config flow for Ambrosia Pollen Radar."""
+
 from __future__ import annotations
 
 import logging
@@ -32,8 +33,7 @@ def get_pollen_options() -> list[selector.SelectOptionDict]:
     """Return pollen selector options."""
     return [
         selector.SelectOptionDict(
-            value=key,
-            label=f"{info['name_en']} ({info['name_ro']})"
+            value=key, label=f"{info['name_en']} ({info['name_ro']})"
         )
         for key, info in POLLEN_SPECIES.items()
     ]
@@ -51,7 +51,9 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            location_name = str(user_input.get(CONF_LOCATION_NAME, DEFAULT_NAME)).strip()
+            location_name = str(
+                user_input.get(CONF_LOCATION_NAME, DEFAULT_NAME)
+            ).strip()
             lat = round(float(user_input[CONF_LATITUDE]), 4)
             lon = round(float(user_input[CONF_LONGITUDE]), 4)
             selected_pollens = user_input.get(CONF_POLLEN_TYPES, [])
@@ -70,15 +72,29 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_LATITUDE: lat,
                         CONF_LONGITUDE: lon,
                         CONF_POLLEN_TYPES: selected_pollens,
-                        CONF_SCAN_INTERVAL: int(user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)),
-                        CONF_FORECAST_DAYS: int(user_input.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS)),
+                        CONF_SCAN_INTERVAL: int(
+                            user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+                        ),
+                        CONF_FORECAST_DAYS: int(
+                            user_input.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS)
+                        ),
                     },
                 )
 
-        default_lat = float(self.hass.config.latitude) if self.hass.config.latitude is not None else 44.4323
-        default_lon = float(self.hass.config.longitude) if self.hass.config.longitude is not None else 26.1063
+        default_lat = (
+            float(self.hass.config.latitude)
+            if self.hass.config.latitude is not None
+            else 44.4323
+        )
+        default_lon = (
+            float(self.hass.config.longitude)
+            if self.hass.config.longitude is not None
+            else 26.1063
+        )
         default_location = str(self.hass.config.location_name or DEFAULT_NAME)
-        default_pollens = [k for k, v in POLLEN_SPECIES.items() if v.get("default", False)]
+        default_pollens = [
+            k for k, v in POLLEN_SPECIES.items() if v.get("default", False)
+        ]
 
         schema = vol.Schema(
             {
@@ -95,17 +111,27 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
-                vol.Optional(CONF_FORECAST_DAYS, default=str(DEFAULT_FORECAST_DAYS)): selector.SelectSelector(
+                vol.Optional(
+                    CONF_FORECAST_DAYS, default=str(DEFAULT_FORECAST_DAYS)
+                ): selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=[
-                            selector.SelectOptionDict(value="3", label="3 Days Forecast"),
-                            selector.SelectOptionDict(value="5", label="5 Days Forecast"),
-                            selector.SelectOptionDict(value="7", label="7 Days Forecast"),
+                            selector.SelectOptionDict(
+                                value="3", label="3 Days Forecast"
+                            ),
+                            selector.SelectOptionDict(
+                                value="5", label="5 Days Forecast"
+                            ),
+                            selector.SelectOptionDict(
+                                value="7", label="7 Days Forecast"
+                            ),
                         ],
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
-                vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): selector.NumberSelector(
+                vol.Optional(
+                    CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL
+                ): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=15,
                         max=1440,
@@ -125,7 +151,9 @@ class AmbrosiaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> AmbrosiaOptionsFlow:
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> AmbrosiaOptionsFlow:
         return AmbrosiaOptionsFlow(config_entry)
 
 
@@ -144,20 +172,25 @@ class AmbrosiaOptionsFlow(config_entries.OptionsFlow):
                 title="",
                 data={
                     CONF_POLLEN_TYPES: user_input.get(CONF_POLLEN_TYPES, []),
-                    CONF_SCAN_INTERVAL: int(user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)),
-                }
+                    CONF_SCAN_INTERVAL: int(
+                        user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+                    ),
+                },
             )
 
         current_pollens = self.config_entry.options.get(
             CONF_POLLEN_TYPES,
             self.config_entry.data.get(
-                CONF_POLLEN_TYPES, [k for k, v in POLLEN_SPECIES.items() if v.get("default")]
+                CONF_POLLEN_TYPES,
+                [k for k, v in POLLEN_SPECIES.items() if v.get("default")],
             ),
         )
-        current_scan = int(self.config_entry.options.get(
-            CONF_SCAN_INTERVAL,
-            self.config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-        ))
+        current_scan = int(
+            self.config_entry.options.get(
+                CONF_SCAN_INTERVAL,
+                self.config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+            )
+        )
 
         schema = vol.Schema(
             {
@@ -171,7 +204,9 @@ class AmbrosiaOptionsFlow(config_entries.OptionsFlow):
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
                 ),
-                vol.Optional(CONF_SCAN_INTERVAL, default=current_scan): selector.NumberSelector(
+                vol.Optional(
+                    CONF_SCAN_INTERVAL, default=current_scan
+                ): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=15,
                         max=1440,

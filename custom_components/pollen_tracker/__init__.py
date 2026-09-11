@@ -1,4 +1,5 @@
 """The Ambrosia & European Pollen integration."""
+
 from __future__ import annotations
 
 import logging
@@ -6,6 +7,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE, Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
 
 from .const import (
     CONF_FORECAST_DAYS,
@@ -22,6 +24,8 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Set up the Ambrosia component."""
@@ -37,12 +41,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     lon = entry.data[CONF_LONGITUDE]
     pollen_types = entry.options.get(
         CONF_POLLEN_TYPES,
-        entry.data.get(CONF_POLLEN_TYPES, [k for k, v in POLLEN_SPECIES.items() if v.get("default")]),
+        entry.data.get(
+            CONF_POLLEN_TYPES,
+            [k for k, v in POLLEN_SPECIES.items() if v.get("default")],
+        ),
     )
-    scan_interval = int(entry.options.get(
-        CONF_SCAN_INTERVAL,
-        entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-    ))
+    scan_interval = int(
+        entry.options.get(
+            CONF_SCAN_INTERVAL,
+            entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+        )
+    )
     forecast_days = int(entry.data.get(CONF_FORECAST_DAYS, DEFAULT_FORECAST_DAYS))
 
     coordinator = AmbrosiaDataCoordinator(

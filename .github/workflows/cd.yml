@@ -8,6 +8,8 @@ jobs:
   release-zip:
     name: Package Integration for HACS Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository

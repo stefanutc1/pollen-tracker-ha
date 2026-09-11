@@ -1,4 +1,5 @@
 """DataUpdateCoordinator for Ambrosia Pollen Radar."""
+
 from __future__ import annotations
 
 import logging
@@ -72,7 +73,9 @@ def find_best_ventilation_window(
             max_v = max(g0[1], g1[1])
             exit_val = pool[i + 2][1] if (i + 2 < len(pool)) else max_v
             # Penalize if exiting the window causes a sudden pollen spike (e.g. morning blossom)
-            surge_penalty = (exit_val - max_v) * 0.7 if (exit_val > max_v * 1.3) else 0.0
+            surge_penalty = (
+                (exit_val - max_v) * 0.7 if (exit_val > max_v * 1.3) else 0.0
+            )
             score = avg * 0.5 + max_v * 0.5 + surge_penalty
 
             if best is None or score < best["score"]:
@@ -157,10 +160,14 @@ class AmbrosiaDataCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         }
 
         try:
-            async with self.session.get(OPEN_METEO_API_URL, params=params, timeout=15) as resp:
+            async with self.session.get(
+                OPEN_METEO_API_URL, params=params, timeout=15
+            ) as resp:
                 if resp.status != 200:
                     text = await resp.text()
-                    raise UpdateFailed(f"Open-Meteo API returned HTTP {resp.status}: {text}")
+                    raise UpdateFailed(
+                        f"Open-Meteo API returned HTTP {resp.status}: {text}"
+                    )
                 data = await resp.json()
         except Exception as err:
             raise UpdateFailed(f"Error fetching pollen forecast: {err}") from err
@@ -209,20 +216,34 @@ class AmbrosiaDataCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             trend_info = calculate_trend(current_val, future_val)
 
             # Max today + peak hour
-            today_pairs = [(t, v) for t, v in zip(times, vals) if t.startswith(today_str)]
-            max_today_pair = max(today_pairs, key=lambda x: x[1]) if today_pairs else ("N/A", 0.0)
+            today_pairs = [
+                (t, v) for t, v in zip(times, vals) if t.startswith(today_str)
+            ]
+            max_today_pair = (
+                max(today_pairs, key=lambda x: x[1]) if today_pairs else ("N/A", 0.0)
+            )
             max_today = round(max_today_pair[1], 1)
-            peak_hour_today = max_today_pair[0][11:16] if len(max_today_pair[0]) >= 16 else "N/A"
+            peak_hour_today = (
+                max_today_pair[0][11:16] if len(max_today_pair[0]) >= 16 else "N/A"
+            )
 
             # Max tomorrow + peak hour
-            tom_pairs = [(t, v) for t, v in zip(times, vals) if t.startswith(tomorrow_str)]
-            max_tom_pair = max(tom_pairs, key=lambda x: x[1]) if tom_pairs else ("N/A", 0.0)
+            tom_pairs = [
+                (t, v) for t, v in zip(times, vals) if t.startswith(tomorrow_str)
+            ]
+            max_tom_pair = (
+                max(tom_pairs, key=lambda x: x[1]) if tom_pairs else ("N/A", 0.0)
+            )
             max_tomorrow = round(max_tom_pair[1], 1)
-            peak_hour_tom = max_tom_pair[0][11:16] if len(max_tom_pair[0]) >= 16 else "N/A"
+            peak_hour_tom = (
+                max_tom_pair[0][11:16] if len(max_tom_pair[0]) >= 16 else "N/A"
+            )
 
             # Max day3 + peak hour
             day3_pairs = [(t, v) for t, v in zip(times, vals) if t.startswith(day3_str)]
-            max_d3_pair = max(day3_pairs, key=lambda x: x[1]) if day3_pairs else ("N/A", 0.0)
+            max_d3_pair = (
+                max(day3_pairs, key=lambda x: x[1]) if day3_pairs else ("N/A", 0.0)
+            )
             max_day3 = round(max_d3_pair[1], 1)
             peak_hour_d3 = max_d3_pair[0][11:16] if len(max_d3_pair[0]) >= 16 else "N/A"
 
@@ -237,14 +258,32 @@ class AmbrosiaDataCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
             # Actionable recommendations
             if max_today >= 30 or current_val >= 30:
-                reco_en = f"High pollen exposure! Keep windows closed during peak hours (around {peak_hour_today}). Best ventilation window: {vent_window['window']}."
-                reco_ro = f"Expunere ridicată! Păstrați ferestrele închise în orele de vârf (în jurul orei {peak_hour_today}). Fereastră optimă de aerisire: {vent_window['window']}."
+                reco_en = (
+                    f"High pollen exposure! Keep windows closed during peak hours (around {peak_hour_today}). "
+                    f"Best ventilation window: {vent_window['window']}."
+                )
+                reco_ro = (
+                    "Expunere ridicată! Păstrați ferestrele închise în orele de vârf "
+                    f"(în jurul orei {peak_hour_today}). Fereastră optimă de aerisire: {vent_window['window']}."
+                )
             elif max_today >= 10 or current_val >= 10:
-                reco_en = f"Moderate pollen levels. Sensitive people may experience symptoms. Aerate preferably during the recommended window ({vent_window['window']})."
-                reco_ro = f"Nivel moderat de polen. Persoanele alergice pot resimți simptome. Aerisiți de preferință în fereastra recomandată ({vent_window['window']})."
+                reco_en = (
+                    "Moderate pollen levels. Sensitive people may experience symptoms. "
+                    f"Aerate preferably during the recommended window ({vent_window['window']})."
+                )
+                reco_ro = (
+                    "Nivel moderat de polen. Persoanele alergice pot resimți simptome. "
+                    f"Aerisiți de preferință în fereastra recomandată ({vent_window['window']})."
+                )
             else:
-                reco_en = f"Low pollen concentration in your area. Favorable outdoor and ventilation conditions ({vent_window['window']})."
-                reco_ro = f"Concentrație scăzută de polen în zonă. Condiții bune pentru aerisire și activități exterioare ({vent_window['window']})."
+                reco_en = (
+                    "Low pollen concentration in your area. "
+                    f"Favorable outdoor and ventilation conditions ({vent_window['window']})."
+                )
+                reco_ro = (
+                    "Concentrație scăzută de polen în zonă. "
+                    f"Condiții bune pentru aerisire și activități exterioare ({vent_window['window']})."
+                )
 
             results["pollens"][p_key] = {
                 "current_concentration": current_val,

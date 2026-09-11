@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: 'pip'
 
       - name: Install Dependencies
         run: |
@@ -45,17 +44,3 @@ jobs:
           else
             echo "No tests directory found, skipping."
           fi
-
-  hacs-validation:
-    name: HACS Compliance Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: HACS Action
-        uses: hacs/action@2.4.1
-        with:
-          category: integration
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

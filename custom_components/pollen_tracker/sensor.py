@@ -1,4 +1,5 @@
 """Sensor platform for Ambrosia Pollen Radar."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -12,7 +13,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import CONF_LOCATION_NAME, CONF_POLLEN_TYPES, DEFAULT_NAME, DOMAIN, POLLEN_SPECIES
+from .const import (
+    CONF_LOCATION_NAME,
+    CONF_POLLEN_TYPES,
+    DEFAULT_NAME,
+    DOMAIN,
+    POLLEN_SPECIES,
+)
 from .coordinator import AmbrosiaDataCoordinator
 
 
@@ -24,7 +31,9 @@ async def async_setup_entry(
     """Set up Ambrosia sensors from config entry."""
     coordinator: AmbrosiaDataCoordinator = hass.data[DOMAIN][entry.entry_id]
     location_name = entry.data.get(CONF_LOCATION_NAME, DEFAULT_NAME)
-    selected_pollens = entry.options.get(CONF_POLLEN_TYPES, entry.data.get(CONF_POLLEN_TYPES, []))
+    selected_pollens = entry.options.get(
+        CONF_POLLEN_TYPES, entry.data.get(CONF_POLLEN_TYPES, [])
+    )
 
     entities: list[SensorEntity] = []
 
@@ -253,7 +262,9 @@ class AmbrosiaVentilationWindowSensor(AmbrosiaBaseSensor):
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        self._attr_unique_id = f"{self.coordinator.name}_{self.pollen_key}_ventilation_window"
+        self._attr_unique_id = (
+            f"{self.coordinator.name}_{self.pollen_key}_ventilation_window"
+        )
         self._attr_name = f"{self.pollen_info['name_en']} Ventilation Window"
 
     @property
