@@ -102,8 +102,8 @@ RISK_LEVELS = [
     },
 ]
 
-# Civic reporting & legal framework (Ambrosia / Ragweed)
+# Civic reference & legal framework (Ambrosia / Ragweed in Romania)
 CIVIC_MAP_URL = "https://www.hartaambroziei.ro/"
 CIVIC_LAW_REF = "Legea nr. 62/2018 (modificată prin Legea 272/2023)"
 CIVIC_FINE_REF = "Amenzi: 1.000 – 5.000 lei (persoane fizice) / 10.000 – 20.000 lei (persoane juridice)"
-CIVIC_ACTION_GUIDE = "Marchează terenul infestat cu pin GPS și fotografii pe HartaAmbroziei.ro pentru sesizarea primăriilor locale."
+CIVIC_ACTION_GUIDE = "Dacă observați fizic plante de ambrozie pe terenuri virane sau neîngrijite, le puteți raporta cu fotografii și pin GPS pe HartaAmbroziei.ro pentru sesizarea primăriilor locale."
