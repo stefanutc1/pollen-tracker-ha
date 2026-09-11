@@ -29,13 +29,13 @@ POLLEN_SPECIES = {
         "name_en": "Mugwort (Artemisia)",
         "name_ro": "Pelin / Peliniță",
         "icon": "mdi:grass",
-        "default": True,
+        "default": False,
     },
     "grass_pollen": {
         "name_en": "Grass (Gramineae)",
         "name_ro": "Graminee / Iarbă",
         "icon": "mdi:seed",
-        "default": True,
+        "default": False,
     },
     "birch_pollen": {
         "name_en": "Birch",

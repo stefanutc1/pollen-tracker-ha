@@ -18,13 +18,11 @@ No physical sensor required! Provides hourly regional forecasts, peak exposure h
   * Includes binary attribute `is_active_now: true/false` to trigger automated home ventilation (HRV, window actuators, or notification reminders).
 * 📈 **Pollen Trend Sensor (`trend`):**
   * Immediate 3-hour outlook: **Rising ↗️**, **Falling ↘️**, or **Stable ➡️**.
-* 🌿 **Supported Pollen Species:**
-  * **Ragweed (Ambrosia)** — `ragweed_pollen` (major autumn allergen)
-  * **Mugwort (Artemisia / Pelin)** — `mugwort_pollen`
-  * **Grass (Gramineae)** — `grass_pollen`
-  * **Birch** — `birch_pollen`
-  * **Olive** — `olive_pollen`
-  * **Alder** — `alder_pollen`
+* 🎯 **Primary Focus: Ambrosia (Ragweed / Ambrozie):**
+  * Built and engineered specifically to detect, forecast, and protect against **Ambrosia artemisiifolia** pollen.
+  * All metrics, calibrated severity thresholds, ventilation windows, and morning alerts are tuned around Ambrosia's aggressive release patterns.
+* 🌿 **Optional Secondary Allergens (Available on demand):**
+  * While Ambrosia is the primary star, you can optionally enable secondary pollen species for year-round utility: Mugwort (*Pelin / Artemisia*), Grass (*Gramineae*), Birch, Olive, and Alder.
 * ⚖️ **Calibrated 5-Level Severity Scale:**
   * **Very Low:** `< 5` grains/m³ (Green `#2ecc71`)
   * **Low:** `5 – 10` grains/m³ (Yellow-Green `#a3cb38`)
@@ -215,17 +213,18 @@ action:
 
 # 🇷🇴 Prezentare în Română: Radar polen ambrozie
 
-Integrare Home Assistant dedicată monitorizării și prognozei pentru **ambrozie și polen alergen**, folosind modelul numeric **Copernicus CAMS Europe** via Open-Meteo.
+Integrare Home Assistant **proiectată și optimizată specific pentru combaterea și monitorizarea ambroziei** (*Ambrosia artemisiifolia*), cel mai agresiv alergen de toamnă. Folosește modelul numeric european de referință **Copernicus CAMS Europe** via Open-Meteo.
 
 ### ✨ Funcții Avansate
-1. **Fereastra Optimă de Aerisire (`ventilation_window`):**
+1. **Focus Total pe Ambrozie:** Algoritmii, pragurile de severitate, alertele matinale și fereastra de aerisire sunt calibrate special pentru dinamica ambroziei. Opțional, pot fi activați și alți alergeni secundari (pelin, graminee, mesteacăn) pentru acoperire pe durata întregului an.
+2. **Fereastra Optimă de Aerisire (`ventilation_window`):**
    * Calculează intervalul optim de 2 ore din timpul zilei cu expunere minimă la polen, aplicând penalizări la salturile bruște de dimineață.
-   * Include atributul `is_active_now: true/false` pentru declanșarea automatizărilor de aerisire.
-2. **Tendință Polen (`trend`):**
+   * Include atributul `is_active_now: true/false` pentru declanșarea automatizărilor de aerisire (recuperator de căldură HRV, notificări).
+3. **Tendință Polen (`trend`):**
    * Indică evoluția în următoarele 3 ore: *În creștere*, *În scădere* sau *Stabil*.
-3. **Scală Calibrată pe 5 Niveluri:**
+4. **Scală Calibrată pe 5 Niveluri:**
    * *Foarte redus (<5)*, *Redus (5–10)*, *Moderat (10–30)*, *Ridicat (30–100)*, *Foarte ridicat (≥100)*.
-4. **Bilingv Nativ:**
+5. **Bilingv Nativ:**
    * Când limba Home Assistant este Română, interfața, configurarea și senzorii apar automat în limba română.
 
 ---
