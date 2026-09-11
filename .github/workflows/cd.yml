@@ -1,0 +1,29 @@
+name: CD
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release-zip:
+    name: Package Integration for HACS Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Package Custom Component
+        run: |
+          mkdir -p build/pollen_tracker
+          cp -r custom_components/pollen_tracker/* build/pollen_tracker/
+          cd build
+          zip -r ../pollen_tracker.zip pollen_tracker/
+          cd ..
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: pollen_tracker.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
