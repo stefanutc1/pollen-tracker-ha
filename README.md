@@ -117,7 +117,7 @@ action:
 ### Method 2: Manual Installation
 
 1. Download the latest release from GitHub.
-2. Copy `custom_components/ambrosia` into your `/config/custom_components/` folder.
+2. Copy `custom_components/pollen_tracker` into your `/config/custom_components/` folder.
 3. Restart Home Assistant and add the integration via the UI.
 
 ---

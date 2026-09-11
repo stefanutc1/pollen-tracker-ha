@@ -1,5 +1,5 @@
 {
-  "domain": "ambrosia",
+  "domain": "pollen_tracker",
   "name": "Pollen Tracker",
   "codeowners": [
     "@ygreq"
@@ -8,5 +8,5 @@
   "documentation": "https://github.com/ygreq/pollen-tracker-ha",
   "issue_tracker": "https://github.com/ygreq/pollen-tracker-ha/issues",
   "iot_class": "cloud_polling",
-  "version": "1.2.0"
+  "version": "1.2.1"
 }

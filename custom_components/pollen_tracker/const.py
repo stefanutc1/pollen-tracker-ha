@@ -1,7 +1,7 @@
 """Constants for Ambrosia Pollen Radar integration."""
 from __future__ import annotations
 
-DOMAIN = "ambrosia"
+DOMAIN = "pollen_tracker"
 
 # Configuration keys
 CONF_LOCATION_NAME = "location_name"
