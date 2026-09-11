@@ -187,6 +187,8 @@ class AmbrosiaCurrentPollenSensor(AmbrosiaBaseSensor):
             "recommendation_ro": d.get("recommendation_ro"),
             "civic_map_url": self.coordinator.data.get("civic_map_url"),
             "civic_law_ref": self.coordinator.data.get("civic_law_ref"),
+            "civic_fine_ref": self.coordinator.data.get("civic_fine_ref"),
+            "civic_action_guide": self.coordinator.data.get("civic_action_guide"),
             "forecast_48h": d.get("forecast_48h", []),
             "time": self.coordinator.data.get("time_series", []),
             "hourly_values": d.get("hourly_values", []),

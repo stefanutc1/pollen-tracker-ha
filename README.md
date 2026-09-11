@@ -4,9 +4,9 @@
 [![Validate](https://img.shields.io/github/actions/workflow/status/ygreq/pollen-tracker-ha/validate.yml?branch=main&style=for-the-badge)](https://github.com/ygreq/pollen-tracker-ha/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-An intelligent Home Assistant integration for **comprehensive seasonal pollen and allergen forecasting** across Europe, powered by the European Union's **Copernicus Atmosphere Monitoring Service (CAMS Europe)** via the free **Open-Meteo Air Quality API**.
+An intelligent Home Assistant integration for **comprehensive seasonal pollen, allergen, and ragweed forecasting** across Europe, powered by the European Union's **Copernicus Atmosphere Monitoring Service (CAMS Europe)** via the free **Open-Meteo Air Quality API**.
 
-No physical sensor required! Provides hourly regional forecasts, peak exposure hours, 3-hour trend analysis, and an optimal daily **Smart Ventilation Window** algorithm for each tracked allergen.
+No physical sensor required! Provides hourly regional forecasts, peak exposure hours, 3-hour trend analysis, an optimal daily **Smart Ventilation Window** algorithm, and built-in **civic reporting tools for Ragweed hot-spots (HartaAmbroziei.ro)**.
 
 > [!IMPORTANT]
 > **🌍 Geographic Coverage: Europe Only (Copernicus CAMS)**
@@ -53,12 +53,48 @@ The integration monitors the 6 major aeroallergens modeled by Copernicus CAMS. Y
   * **Moderate:** `10 – 30` grains/m³ (Orange `#f39c12`)
   * **High:** `30 – 100` grains/m³ (Red `#e74c3c`)
   * **Very High:** `≥ 100` grains/m³ (Purple `#8e44ad`)
+* 🏛️ **Civic Action & Legal Framework (HartaAmbroziei.ro):**
+  * Ragweed is the only allergen in Romania subject to statutory eradication under **Law 62/2018 (amended by Law 272/2023)**, with fines up to 20,000 RON.
+  * Ragweed sensors expose direct attributes (`civic_map_url`, `civic_law_ref`, `civic_fine_ref`, `civic_action_guide`) linking to **[HartaAmbroziei.ro](https://www.hartaambroziei.ro/)** for GPS crowd-sourced reporting of unkept infested land.
 * 🌍 **Native Bilingual Support (Why bilingual attributes?):**
   * **UI Localization:** Fully translated in both English and Romanian. If your Home Assistant language is set to Romanian, all setup dialogs and sensor names will automatically display in Romanian.
   * **Bilingual Sensor Attributes:** All sensors expose parallel attributes (`risk_level_en` / `risk_level_ro`, `recommendation_en` / `recommendation_ro`, `trend_en` / `trend_ro`).
   * **Why this is useful:** Many users keep their Home Assistant system language in **English** (for community blueprints, integrations, and forums), but want automated push notifications (Discord, Telegram, mobile app) and family dashboards in **Romanian**. Pre-translated attributes eliminate the need to write complex Jinja2 translation logic!
-* 🗺️ **Civic & Legal Reporting:**
-  * Direct attribute links to **HartaAmbroziei.ro** and legal reference (Law 62/2018).
+
+---
+
+## 🏛️ Civic Action: Reporting Ragweed Infestations via HartaAmbroziei.ro
+
+Unlike tree or grass pollens, **Ragweed (Ambrosia) is legally regulated in Romania**. Landowners are legally required to clear ragweed by June 30th each year and maintain clean lots until the end of October.
+
+### How Civic Reporting Works:
+1. **Open the Map:** Access **[HartaAmbroziei.ro](https://www.hartaambroziei.ro/)** (developed by Asociația Stop Ambroziei).
+2. **Mark an Infested Lot:** Tap the **"Marchează o zonă"** button (top right corner), pinpoint the infested land via GPS, and upload clear photos of the blooming ragweed.
+3. **Official Action:** Reports are aggregated and forwarded to local town halls (*primării*) and local police to issue summons and fines (1,000–5,000 RON for individuals, 10,000–20,000 RON for companies).
+
+### 📱 Actionable Mobile Notification Automation
+
+When Home Assistant detects a High or Very High Ragweed concentration in your area, this automation sends a notification to your smartphone with an action button that opens **HartaAmbroziei.ro** with one tap:
+
+```yaml
+alias: "📢 Ragweed High Alert - Civic Report Notification"
+trigger:
+  - trigger: numeric_state
+    entity_id: sensor.pollen_tracker_home_ragweed_ambrosia_concentration
+    above: 30
+action:
+  - action: notify.notify
+    data:
+      title: "⚠️ Alertă Polen Ambrozie: Concentrație Ridicată!"
+      message: >
+        Concentrația de ambrozie a atins {{ states('sensor.pollen_tracker_home_ragweed_ambrosia_concentration') }} grains/m³! 
+        Dacă observi terenuri neîngrijite infestate în cartier, raportează focarul către primărie.
+      data:
+        actions:
+          - action: "URI"
+            title: "📢 Raportează pe HartaAmbroziei.ro"
+            uri: "https://www.hartaambroziei.ro/"
+```
 
 ---
 
@@ -81,7 +117,7 @@ The integration monitors the 6 major aeroallergens modeled by Copernicus CAMS. Y
 
 ---
 
-## 📊 Lovelace Dashboard Card (with ApexCharts & Ventilation Badge)
+## 📊 Lovelace Dashboard Card (with ApexCharts & Civic Report Button)
 
 ```yaml
 type: custom:vertical-stack-in-card
@@ -121,6 +157,29 @@ cards:
         name: Peak Tomorrow
       - entity: sensor.pollen_tracker_home_ragweed_ambrosia_ventilation_window
         name: Best Airing Window
+
+  # Civic Action Button (HartaAmbroziei.ro)
+  - type: custom:button-card
+    name: "📢 Raportează teren infestat (HartaAmbroziei.ro)"
+    icon: mdi:map-marker-alert
+    tap_action:
+      action: url
+      url_path: https://www.hartaambroziei.ro/
+    styles:
+      card:
+        - padding: 10px
+        - border-radius: 8px
+        - background-color: rgba(231, 76, 60, 0.12)
+        - border: 1px solid #e74c3c
+        - margin-top: 4px
+        - margin-bottom: 8px
+      name:
+        - font-size: 13px
+        - font-weight: 600
+        - color: var(--primary-text-color)
+      icon:
+        - color: "#e74c3c"
+        - width: 22px
 
   # 48-Hour Forecast Curve (ApexCharts)
   - type: custom:apexcharts-card
@@ -199,6 +258,11 @@ action:
                   "name": "💡 Recomandare",
                   "value": "{{ reco }}",
                   "inline": false
+                },
+                {
+                  "name": "🏛️ Implicare Civică",
+                  "value": "[Raportează focar pe HartaAmbroziei.ro](https://www.hartaambroziei.ro/) (Legea 62/2018)",
+                  "inline": false
                 }
               ]
             }
@@ -223,9 +287,18 @@ Integrare Home Assistant **pentru monitorizarea și prognoza completă a polenul
 > - **Civic & Legal:** Link direct către [HartaAmbroziei.ro](https://www.hartaambroziei.ro/) și referință legislativă la Legea nr. 62/2018 (modificată prin Legea 272/2023).
 > - **Atribute bilingve (`_ro` / `_en`):** Permite utilizatorilor cu Home Assistant în limba engleză să trimită notificări pe telefon sau Discord direct în limba română, fără șabloane Jinja2 complicate.
 
+### 🏛️ Specificul Ambroziei în România: Obligație Legală & Sesizări Civice
+
+Ambrozia (*Ambrosia artemisiifolia*) este singura plantă din România cu regim juridic sancționator:
+* **Legea nr. 62/2018 (actualizată prin Legea 272/2023):** Proprietarii sau deținătorii de terenuri sunt obligați să desfășoare lucrări de combatere a ambroziei până la data de 30 iunie a fiecărui an și să mențină terenurile curate pe toată durata sezonului de vegetație (până în octombrie).
+* **Amenzi:** De la **1.000 la 5.000 lei** pentru persoane fizice și de la **10.000 la 20.000 lei** pentru persoane juridice.
+* **Platforma comunitară HartaAmbroziei.ro:** Dezvoltată de Asociația Stop Ambroziei, permite oricărui cetățean să marcheze terenurile infestate pe hartă cu coordonate GPS și fotografii. Sesizările sunt centralizate și transmise primăriilor locale și poliției locale pentru aplicarea legii.
+
+Senzorul de ambrozie expune direct în atribute link-ul de raportare (`civic_map_url`), referința legală (`civic_law_ref`), amenzile (`civic_fine_ref`) și ghidul rapid de acțiune (`civic_action_guide`).
+
 ### 🌾 Specii de Polen Monitorizate
 1. **Ambrozie (`ragweed_pollen`):** Sezon august – octombrie (alergenul numărul 1 de toamnă).
-2. **Pelin / Peliniță (`mugwort_pollen`):** Sezon iulie – septembrie. *Recomandat să fie activat simultan cu ambrozia din cauza alergiilor încrucișate.*
+2. **Pelin / Peliniță (`mugwort_pollen`):** Sezon iulie – septembrie. *Recomandat să fie activat simultan cu ambrozia din cauza alergiilor încrucișate frecvente.*
 3. **Graminee / Iarbă (`grass_pollen`):** Sezon mai – iulie (cel mai răspândit alergen din Europa).
 4. **Mesteacăn (`birch_pollen`):** Sezon martie – mai (alergen major de primăvară).
 5. **Măslin (`olive_pollen`):** Sezon aprilie – iunie (specific regiunilor mediteraneene).
@@ -241,10 +314,8 @@ Integrare Home Assistant **pentru monitorizarea și prognoza completă a polenul
    * Senzori separați pentru *Azi*, *Mâine* și *Poimâine* cu indicarea exactă a orei la care se atinge vârful.
 4. **Scală Calibrată pe 5 Niveluri:**
    * *Foarte redus (<5)*, *Redus (5–10)*, *Moderat (10–30)*, *Ridicat (30–100)*, *Foarte ridicat (≥100)*.
-5. **Bilingv Nativ & Atribute Bilingve (De ce atribute în două limbi?):**
-   * **Localizare completă în UI:** Dacă limba Home Assistant este setată în Română, toate ferestrele de configurare și denumirile senzorilor apar automat în limba română (prin `translations/ro.json`).
-   * **Atribute bilingve în senzori:** Toți senzorii expun atribute paralele (`risk_level_ro` / `risk_level_en`, `recommendation_ro` / `recommendation_en`, `trend_ro` / `trend_en`).
-   * **De ce este util:** Foarte mulți utilizatori preferă să țină Home Assistant în **Engleză** (pentru compatibilitate cu ghiduri, blueprint-uri și comunitatea globală), dar doresc ca notificările (pe telefon, Telegram sau Discord) și tablourile de bord destinate familiei să fie afișate direct în **Română**. Prezența ambelor limbi direct în atribute elimină complet nevoia de a scrie șabloane Jinja2 complicate de traducere în automatizări!
+5. **Bilingv Nativ & Atribute Bilingve:**
+   * Toate denumirile, valorile și atributele sunt disponibile bilingv (`_ro` și `_en`).
 
 ---
 

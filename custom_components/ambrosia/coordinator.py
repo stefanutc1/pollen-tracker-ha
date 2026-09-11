@@ -10,6 +10,8 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
+    CIVIC_ACTION_GUIDE,
+    CIVIC_FINE_REF,
     CIVIC_LAW_REF,
     CIVIC_MAP_URL,
     DEFAULT_DOMAIN_MODEL,
@@ -190,6 +192,8 @@ class AmbrosiaDataCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "pollens": {},
             "civic_map_url": CIVIC_MAP_URL,
             "civic_law_ref": CIVIC_LAW_REF,
+            "civic_fine_ref": CIVIC_FINE_REF,
+            "civic_action_guide": CIVIC_ACTION_GUIDE,
         }
 
         for p_key in self.pollen_types:
