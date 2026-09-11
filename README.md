@@ -1,7 +1,7 @@
-# 🌿 Ambrosia Pollen Radar for Home Assistant (`ambrosia-ha`)
+# 🌿 Ambrosia Pollen Radar for Home Assistant (`ambrosia-pollen-radar-ha`)
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/default)
-[![Validate](https://img.shields.io/github/actions/workflow/status/ygreq/ambrosia-ha/validate.yml?branch=main&style=for-the-badge)](https://github.com/ygreq/ambrosia-ha/actions)
+[![Validate](https://img.shields.io/github/actions/workflow/status/ygreq/ambrosia-pollen-radar-ha/validate.yml?branch=main&style=for-the-badge)](https://github.com/ygreq/ambrosia-pollen-radar-ha/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 An intelligent Home Assistant integration for **Ambrosia (Ragweed) and allergen pollen forecasting**, powered by the European **Copernicus Atmosphere Monitoring Service (CAMS Europe)** via the free **Open-Meteo Air Quality API**.
@@ -45,7 +45,7 @@ No physical sensor required! Provides hourly regional forecasts, peak exposure h
 
 1. Open **HACS** in your Home Assistant.
 2. Click the 3 dots in the upper right corner > **Custom repositories**.
-3. Add repository URL: `https://github.com/ygreq/ambrosia-ha`
+3. Add repository URL: `https://github.com/ygreq/ambrosia-pollen-radar-ha`
 4. Category: **Integration**.
 5. Find **Ambrosia Pollen Radar**, click **Download**, then restart Home Assistant.
 6. Go to **Settings > Devices & Services > Add Integration**, search for **Ambrosia Pollen Radar**.
