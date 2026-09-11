@@ -29,9 +29,10 @@ No physical sensor required! Provides hourly regional forecasts, peak exposure h
   * **Moderate:** `10 – 30` grains/m³ (Orange `#f39c12`)
   * **High:** `30 – 100` grains/m³ (Red `#e74c3c`)
   * **Very High:** `≥ 100` grains/m³ (Purple `#8e44ad`)
-* 🌍 **Native Bilingual Support:**
-  * English & Romanian native translations. UI displays in Romanian when HA language is Romanian.
-  * All sensors expose bilingual attributes (`risk_level_en` / `risk_level_ro`, `recommendation_en` / `recommendation_ro`, `trend_en` / `trend_ro`).
+* 🌍 **Native Bilingual Support (Why bilingual attributes?):**
+  * **UI Localization:** Fully translated in both English and Romanian. If your Home Assistant system language is set to Romanian, all config dialogs and sensor names will automatically display in Romanian.
+  * **Bilingual Sensor Attributes:** All sensors expose dual language attributes (`risk_level_en` / `risk_level_ro`, `recommendation_en` / `recommendation_ro`, `trend_en` / `trend_ro`).
+  * **Why this is useful:** Many users keep their Home Assistant system language in **English** (for international community blueprints, integrations, and documentation), but want automated notifications (Discord, Telegram, mobile push) and family dashboards written in **Romanian**. Pre-translated attributes eliminate the need to write complex Jinja2 translation templates in your automations!
 * 🗺️ **Civic & Community Mapping:**
   * Direct attribute links to **HartaAmbroziei.ro** and legal reference.
 
@@ -224,8 +225,10 @@ Integrare Home Assistant **proiectată și optimizată specific pentru combatere
    * Indică evoluția în următoarele 3 ore: *În creștere*, *În scădere* sau *Stabil*.
 4. **Scală Calibrată pe 5 Niveluri:**
    * *Foarte redus (<5)*, *Redus (5–10)*, *Moderat (10–30)*, *Ridicat (30–100)*, *Foarte ridicat (≥100)*.
-5. **Bilingv Nativ:**
-   * Când limba Home Assistant este Română, interfața, configurarea și senzorii apar automat în limba română.
+5. **Bilingv Nativ & Atribute Bilingve (De ce atribute în două limbi?):**
+   * **Localizare completă în UI:** Dacă limba Home Assistant este setată în Română, toate ferestrele de configurare și denumirile senzorilor apar automat în limba română (prin `translations/ro.json`).
+   * **Atribute bilingve în senzori:** Toți senzorii expun atribute paralele (`risk_level_ro` / `risk_level_en`, `recommendation_ro` / `recommendation_en`, `trend_ro` / `trend_en`).
+   * **De ce este util:** Foarte mulți utilizatori preferă să țină Home Assistant în **Engleză** (pentru compatibilitate cu ghiduri, blueprint-uri și comunitatea globală), dar doresc ca notificările (pe telefon, Telegram sau Discord) și tablourile de bord destinate familiei să fie afișate direct în **Română**. Prezența ambelor limbi direct în atribute elimină complet nevoia de a scrie șabloane Jinja2 complicate de traducere în automatizări!
 
 ---
 
